@@ -4,7 +4,7 @@ interface IProduct {
   brand: string;
   description: string;
   image: string;
-  price: number;
+  price: string;
 }
 
 interface ProductProp {

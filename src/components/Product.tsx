@@ -15,10 +15,15 @@ const ProductComponent: React.FC = () => {
           initialValues={{ search: '' }}
           onSubmit={ async values => {
               const products = await getProducts(values.search)
-              console.log(values);
               const data = products.data;
-              console.log(data);
-              setProducts(data)
+              const transformedData = data.map((product) => {
+                let image = 'https://' + product.image;
+                let price = new Intl.NumberFormat('es-CL', {currency: 'CLP', style: 'currency'}).format(Number(product.price));
+                product.image = image;
+                product.price = price;
+                return ({...product})
+              })
+              setProducts(transformedData)
             }
           } 
         >
@@ -30,13 +35,11 @@ const ProductComponent: React.FC = () => {
       <div className='container'>
         <div className='center'>
           { products.map((product) => 
-          <article key={product._id} onClick={() => open('https://' + product.image)}>
-             <svg>
-               <use xlinkHref={product.image} /> 
-             </svg>
-            <p>{[product.brand, product.description, product.price].join(
-            ' - '
-            )}</p>
+          <article key={product._id} onClick={() => open(product.image)}>
+            <img src={product.image}/>
+
+            <p><b>{product.brand}</b> {product.description}</p>
+            <p><b>{product.price}</b></p>
           </article>
             )
           }
